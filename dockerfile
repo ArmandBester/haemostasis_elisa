@@ -35,4 +35,4 @@ HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
 COPY ./src .
 
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "id_ont", "streamlit", "run", "app.py"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "haemostasis_elisa", "streamlit", "run", "app.py"]
