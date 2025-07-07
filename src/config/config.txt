@@ -1,3 +1,0 @@
-Plate1 A1 pos: col: B, row: 5
-Plate2 A1 pos: col: B, row: 26
-

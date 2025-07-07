@@ -1,0 +1,23 @@
+{
+    "analysis_name_pos": 
+    {"col": 1,
+    "row": 1},
+    
+    "serial_name_pos": 
+    {"col": 1,
+    "row": 2},
+
+    "plates": 
+    [
+        {"name": "Plate1",
+            "pos":{"col": 1, "row": 5},
+            "assay_name_pos": {"col": 1, "row": 3}
+        },
+        {"name": "Plate2",
+            "pos":{"col": 1, "row": 26},
+            "assay_name_pos": {"col": 1, "row": 24}
+        }
+    ]
+}
+
+
