@@ -7,6 +7,8 @@
 
 * Clone the repo. Alternatively you can also download the ZIP file if you don't have git.
 
+### Setup
+
 ```
 git clone https://github.com/ArmandBester/haemostasis_elisa.git
 ```
