@@ -5,7 +5,7 @@
 * Clone the repo. Alternatively you can also download the ZIP file if you don't have git.
 
 ```
-git clone https://github.com/ArmandBester/poepsnuifer.git](https://github.com/ArmandBester/haemostasis_elisa.git)
+git clone https://github.com/ArmandBester/haemostasis_elisa.git
 ```
   
 * cd into the cloned repo
