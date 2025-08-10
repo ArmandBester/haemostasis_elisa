@@ -45,6 +45,8 @@ If using this on your own machine you can go to the `localhost` link or if you w
 
 ## About the curve fitting
 
+### Four Parameter Logistig equation (4PL)
+
 $$
 y = d + \frac{a - d}{1 + \left(\frac{x}{c}\right)^b}
 $$
