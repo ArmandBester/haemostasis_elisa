@@ -1,1 +1,0 @@
-This is where the temp results are stored and deleted after the session is released
