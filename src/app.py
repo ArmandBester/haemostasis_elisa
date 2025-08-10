@@ -12,6 +12,7 @@ from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
 import plotly.express as px
 import plotly.graph_objects as go
+import shutil
 
 for key in ['session', 'save_folder']:
     st.session_state[key] = ''
@@ -277,6 +278,17 @@ if session != '':
         st.plotly_chart(plot)
 
     
+
+## Clean up
+work_folder = "work_dir"  # Replace with the actual path
+for item in os.listdir(work_folder):
+    item_path = os.path.join(work_folder, item)
+    if os.path.isdir(item_path):
+        try:
+            shutil.rmtree(item_path)
+            print(f"Deleted folder: {item_path}")
+        except OSError as e:
+            print(f"Error deleting folder {item_path}: {e}")
 
 
 
