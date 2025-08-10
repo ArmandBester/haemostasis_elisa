@@ -71,6 +71,8 @@ $$
 x = c\bigg(\frac{a-d}{y-d} - 1\bigg)^\frac{1}{b}
 $$
 
+### Another calculator
+[Online 4PL calculator](https://www.aatbio.com/tools/four-parameter-logistic-4pl-curve-regression-online-calculator)
 
 
 
