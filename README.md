@@ -2,6 +2,9 @@
 
 ## Installation
 
+### Docker
+[https://docs.docker.com/get-started/](https://docs.docker.com/get-started/)
+
 * Clone the repo. Alternatively you can also download the ZIP file if you don't have git.
 
 ```
@@ -10,6 +13,10 @@ git clone https://github.com/ArmandBester/haemostasis_elisa.git
   
 * cd into the cloned repo
 
+  ```
+  cd haemostasis_elisa
+  ```
+
 * Build the docker image
 
 ```
@@ -17,8 +24,6 @@ docker build -t elisa_calc .
 ```
 
 If using Apple ARM silicon (M1 or M2 ...) please explicitly specify the architecture using the `--platform` option as shown below. Also make sure you have a reasonably recent Rosetta installation: [https://support.apple.com/en-za/102527](https://support.apple.com/en-za/102527)
-
-[https://docs.docker.com/get-started/](https://docs.docker.com/get-started/)
 
 ```
 docker build -t elisa_calc .  --platform linux/amd64
