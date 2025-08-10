@@ -15,9 +15,9 @@ git clone https://github.com/ArmandBester/haemostasis_elisa.git
   
 * cd into the cloned repo
 
-  ```
-  cd haemostasis_elisa
-  ```
+```
+cd haemostasis_elisa
+```
 
 * Build the docker image
 
