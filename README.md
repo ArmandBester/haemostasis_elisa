@@ -5,9 +5,9 @@
 ### Docker
 [https://docs.docker.com/get-started/](https://docs.docker.com/get-started/)
 
-* Clone the repo. Alternatively you can also download the ZIP file if you don't have git.
-
 ### Setup
+
+* Clone the repo. Alternatively you can also download the ZIP file if you don't have git.
 
 ```
 git clone https://github.com/ArmandBester/haemostasis_elisa.git
