@@ -40,3 +40,37 @@ You can now view your Streamlit app in your browser.
 ```
 
 If using this on your own machine you can go to the `localhost` link or if you want to have this on a dedicated machine in your organization you can follow the IP address of the machine 'xxx.xxx.xxx.xxx:8501'
+
+---
+
+## About the curve fitting
+
+$$
+y = d + \frac{a - d}{1 + \left(\frac{x}{c}\right)^b}
+$$
+
+[Source](https://www.myassays.com/four-parameter-logistic-regression.html)
+
+Of course x = the independent variable and y = the dependent variable just as in the linear model above. The 4 estimated parameters consist of the following:
+
+* a = the minimum value that can be obtained (i.e. what happens at 0 dose)
+
+* d = the maximum value that can be obtained (i.e. what happens at infinite dose)
+
+* c = the point of inflection (i.e. the point on the S shaped curve halfway between a and d)
+
+* b = Hill’s slope of the curve (i.e. this is related to the steepness of the curve at point c).
+
+The `d` parameter here is key. Remember the Hill equation for cooperativity, haemoglobin and how cool that mechanism is.
+
+This equation rearranges easily also, since the `x` only appears once, unlike the one-site binding.
+
+$$
+x = c\bigg(\frac{a-d}{y-d} - 1\bigg)^\frac{1}{b}
+$$
+
+
+
+
+
+
