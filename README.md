@@ -81,7 +81,7 @@ $$
 ### Another calculator
 [Online 4PL calculator](https://www.aatbio.com/tools/four-parameter-logistic-4pl-curve-regression-online-calculator)
 
-### NotebookML audio deep dive
+### NotebookLM audio deep dive
 
 
 https://github.com/user-attachments/assets/6e0e7fd8-5df2-481a-a826-7ae4bb02044c
