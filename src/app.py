@@ -277,18 +277,22 @@ if session != '':
     for plot in figure_dicts:
         st.plotly_chart(plot)
 
-    
+    st.markdown("## Sample results")
+    st.write("Sample results goes here")
 
-## Clean up
-work_folder = "work_dir"  # Replace with the actual path
-for item in os.listdir(work_folder):
-    item_path = os.path.join(work_folder, item)
-    if os.path.isdir(item_path):
-        try:
-            shutil.rmtree(item_path)
-            print(f"Deleted folder: {item_path}")
-        except OSError as e:
-            print(f"Error deleting folder {item_path}: {e}")
+    with st.expander("Expand this for json data"):
+        st.write(param_results_dict)
+
+
+    ## Clean up the work dir
+
+    tmp_folder = os.path.split(save_folder)[0]
+    st.markdown("***")
+    st.write("Cleaning the temporary data, deleted:")
+    st.write(tmp_folder)
+    shutil.rmtree(tmp_folder)
+
+
 
 
 
