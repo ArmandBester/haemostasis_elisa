@@ -169,6 +169,7 @@ def create_figures(param_results_dict):
                     array=param_results_dict[key]["diffs_of_values"],
                     visible=True),
                 mode='markers',
+                name='Calibrators',
                 marker=dict(
                     size=10,
                     color='teal',
@@ -182,6 +183,7 @@ def create_figures(param_results_dict):
                 x=param_results_dict[key]["x_fit"],
                 y=param_results_dict[key]["y_fit"],
                 mode='lines',
+                name='Fitted curve',
                 marker=dict(
                     color='orange'
                     )
