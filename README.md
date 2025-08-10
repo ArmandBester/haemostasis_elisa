@@ -70,7 +70,6 @@ Of course x = the independent variable and y = the dependent variable just as in
 
 * b = Hill’s slope of the curve (i.e. this is related to the steepness of the curve at point c).
 
-The `d` parameter here is key. Remember the Hill equation for cooperativity, haemoglobin and how cool that mechanism is.
 
 This equation rearranges easily also, since the `x` only appears once, unlike the one-site binding.
 
