@@ -60,13 +60,13 @@ $$
 
 [Source](https://www.myassays.com/four-parameter-logistic-regression.html)
 
-Of course x = the independent variable and y = the dependent variable just as in the linear model above. The 4 estimated parameters consist of the following:
+Of course, x = the independent variable and y = the dependent variable. The 4 estimated parameters consist of the following:
 
 * a = the minimum value that can be obtained (i.e. what happens at 0 dose)
 
 * d = the maximum value that can be obtained (i.e. what happens at infinite dose)
 
-* c = the point of inflection (i.e. the point on the S shaped curve halfway between a and d)
+* c = the point of inflection (i.e. the point on the S-shaped curve halfway between a and d)
 
 * b = Hill’s slope of the curve (i.e. this is related to the steepness of the curve at point c).
 
