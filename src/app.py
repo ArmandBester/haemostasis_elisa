@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
+import plotly.express as px
+import plotly.graph_objects as go
 
 for key in ['session', 'save_folder']:
     st.session_state[key] = ''
@@ -117,7 +119,99 @@ def compute_4PL(y, a, b, c, d):
 ## initial values
 p0 = [0, 1, 25, 1] # this may need work for the inititial predictions
 
+def compute_4PL_params(p0 = p0):
+    unique_assays = data['assay'].unique()
 
+    param_results_dict = {}
+
+    for assay in unique_assays:
+        print(assay)
+        # create a datafram to make things easier, these value are then passed to a dictionary
+        standard_curve_data = data.query("assay == @assay").iloc[:,0:2]
+        standard_curve_data['mean'] = standard_curve_data.mean(axis=1)
+        standard_curve_data['diffs_of_values'] = abs(standard_curve_data.iloc[:,0] - standard_curve_data.iloc[:,1]) 
+        standard_curve_data['perc'] = make_ranges_for_std_curve(6)
+
+        callibrators = standard_curve_data["mean"].values
+        perc = standard_curve_data["perc"].values
+        diffs_of_values = standard_curve_data['diffs_of_values'].values
+        
+        popt, pcov = curve_fit(logistic_4_param, perc, callibrators, p0=p0)
+        
+        # Extract the fitted parameters
+        a_fit, b_fit, c_fit, d_fit = popt
+
+        # Generate the fitted curve
+        x_fit = np.linspace(min(perc), max(perc)*2, 10000)
+        y_fit = logistic_4_param(x_fit, a_fit, b_fit, c_fit, d_fit)
+
+        param_results_dict[assay] = {"params": popt, 
+                            "perc": perc, 
+                            "callibrators": callibrators,
+                            "diffs_of_values": diffs_of_values,
+                            "x_fit": x_fit, 
+                            "y_fit": y_fit}
+        
+    return param_results_dict
+
+## A function to create figures
+def create_figures(param_results_dict):
+    list_of_figures = []
+    for key in param_results_dict.keys():
+        fig = go.Figure()
+        # Add the points for the percentage calibrator and Absorbance
+        f = fig.add_trace(
+            go.Scatter(
+                x=param_results_dict[key]["perc"],
+                y=param_results_dict[key]["callibrators"],
+                error_y=dict(
+                    type='data', 
+                    array=param_results_dict[key]["diffs_of_values"],
+                    visible=True),
+                mode='markers',
+                marker=dict(
+                    size=10,
+                    color='teal',
+                    symbol='circle'
+                    )
+                )
+            )
+        # Add a line plot for the fitted model
+        f = fig.add_trace(
+            go.Scatter(
+                x=param_results_dict[key]["x_fit"],
+                y=param_results_dict[key]["y_fit"],
+                mode='lines',
+                marker=dict(
+                    color='orange'
+                    )
+            )            
+        )
+        # Update the figure size, margin and title
+        f = fig.update_layout(
+            autosize=False,
+            width=600,
+            height=400,
+            margin=dict(
+                l=50,
+                r=50,
+                b=10,
+                t=40,
+                pad=4
+                ),
+            title=dict(text=key, font=dict(size=20)),
+            xaxis=dict(title=dict(text="Percentage")),
+            yaxis=dict(title=dict(text="Absorbance"))
+            
+            )
+
+        fig_dict = f.to_dict()
+        list_of_figures.append(fig_dict)
+
+    return list_of_figures
+
+
+        
 ## ----------------------------------------------------------------------------------------##
 # APP
 ## ----------------------------------------------------------------------------------------##
@@ -169,10 +263,19 @@ if session != '':
 
     unique_assays = data['assay'].unique()
 
-    # extract the standard curve data
+    st.markdown("## Assay names")
+    st.write(unique_assays)
+
+    # compute and extract the standard curve data
+    param_results_dict = compute_4PL_params()
+    figure_dicts = create_figures(param_results_dict)
+
+    st.markdown("## Regression plots")
+    for plot in figure_dicts:
+        st.plotly_chart(plot)
+
+    
+
 
 
     
-    
-
-    # st.plotly_chart(rel_ab_fig)
