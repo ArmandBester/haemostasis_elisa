@@ -278,7 +278,7 @@ if session != '':
         st.plotly_chart(plot)
 
     st.markdown("## Sample results")
-    st.write("Sample results goes here")
+    st.write("Sample results go here")
 
     with st.expander("Expand this for json data"):
         st.write(param_results_dict)
