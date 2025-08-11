@@ -332,8 +332,9 @@ if session != '':
 
     f_results = px.bar(data_frame=x_infered_data, 
                        x='number', y='perc', 
-                       facet_row='assay', height=800, color='perc', 
-                       color_continuous_scale=px.colors.sequential.YlGnBu,  range_color=[0, 100])
+                       facet_row='assay', height=800, color='perc', error_y='stdev',
+                       color_continuous_scale=px.colors.sequential.YlGnBu,  
+                       range_color=[0, 100])
     f_results.update_yaxes(matches=None)
     st.plotly_chart(f_results)
 
