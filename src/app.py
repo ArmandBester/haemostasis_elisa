@@ -214,6 +214,47 @@ def create_figures(param_results_dict):
     return list_of_figures
 
 
+def infer_x_values_from_absorbance(data):
+    x_infered_data = pd.DataFrame()
+    
+    setup = get_template_from_config()['assay_setup']
+    sample_col_start = setup['sample_col_start']
+    sample_row_start = setup['sample_row_start']
+    repl_configuration = setup['repl_configuration']
+    repl_dilution_configuration = setup['repl_dilution_configuration']
+    for assay in data['assay'].unique():    
+        a,b,c,d = param_results_dict[assay]['params']
+        tmp = data.query("assay == @assay")
+        sample_data = tmp.iloc[sample_row_start:, sample_col_start:12]
+    
+        list_of_row_corners = np.arange(0, sample_data.shape[0], repl_configuration[0])
+        list_of_col_corners = np.arange(0, sample_data.shape[1], repl_configuration[1])
+        n = 1
+        #blocks = []
+        for col in list_of_col_corners:
+            for row in list_of_row_corners:
+                block = np.array(sample_data.iloc[row:row+repl_configuration[0],
+                    col:col+repl_configuration[1]])
+                block = block.flatten()            
+                repl_dilution_configuration = np.array(repl_dilution_configuration).flatten()
+                compute_4PL_vectorized = np.vectorize(compute_4PL)
+                x_infer = compute_4PL_vectorized(y=block, a=a,b=b,c=c,d=d)
+                x_infer_undiluted = x_infer * repl_dilution_configuration
+                x_infer_avg = np.average(x_infer_undiluted)
+                x_infer_std = np.std(x_infer_undiluted)
+                
+                tmp = pd.DataFrame([n, col, row, x_infer_avg, x_infer_std, assay]).T
+
+                x_infered_data = pd.concat([x_infered_data, tmp])
+                n+=1
+    x_infered_data.columns = ['number', 'col', 'row', 'perc', 'stdev', 'assay']
+    x_infered_data = x_infered_data.dropna(subset=['perc']).reset_index().drop('index', axis=1)
+    x_infered_data['perc'] = x_infered_data['perc'].astype('float')
+    x_infered_data['stdev'] = x_infered_data['stdev'].astype('float')
+    return x_infered_data
+            
+
+
         
 ## ----------------------------------------------------------------------------------------##
 # APP
@@ -283,6 +324,18 @@ if session != '':
     with st.expander("Expand this for json data"):
         st.write(param_results_dict)
 
+    st.markdown("Inferred sample results")
+    x_infered_data = infer_x_values_from_absorbance(data)
+    
+
+    st.dataframe(x_infered_data)
+
+    f_results = px.bar(data_frame=x_infered_data, 
+                       x='number', y='perc', 
+                       facet_row='assay', height=800, color='perc', 
+                       color_continuous_scale=px.colors.sequential.YlGnBu,  range_color=[0, 100])
+    f_results.update_yaxes(matches=None)
+    st.plotly_chart(f_results)
 
     ## Clean up the work dir
 

@@ -7,6 +7,12 @@
     {"col": 1,
     "row": 2},
 
+    "assay_setup":
+    {"sample_col_start": 2,
+     "sample_row_start": 0,
+     "repl_configuration": [2,2],
+    "repl_dilution_configuration":[[5,5],[10,10]]},
+
     "plates": 
     [
         {"name": "Plate1",
