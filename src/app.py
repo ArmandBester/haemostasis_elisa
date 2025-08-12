@@ -14,6 +14,18 @@ import plotly.express as px
 import plotly.graph_objects as go
 import shutil
 
+# some custom setum and page width adjustment
+st.set_page_config(page_title="ELISA calculator", layout="wide", page_icon="⚕️")
+st.markdown("""
+        <style>
+        .stMainBlockContainer {
+            max-width: 80rem; /* Adjust this value as needed */
+        }
+        </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 for key in ['session', 'save_folder']:
     st.session_state[key] = ''
 
@@ -56,7 +68,7 @@ def make_ranges_for_std_curve(n):
     return vwf_ref_prec
 
 
-# Read the template file
+# Read the config file
 def get_template_from_config():
     with open('config/config.json', 'r') as file:
         config = json.load(file)
@@ -133,7 +145,7 @@ def compute_4PL_params(p0 = p0):
         standard_curve_data['diffs_of_values'] = abs(standard_curve_data.iloc[:,0] - standard_curve_data.iloc[:,1]) 
         standard_curve_data['perc'] = make_ranges_for_std_curve(6)
 
-        callibrators = standard_curve_data["mean"].values
+        callibrators = standard_curve_data["mean"].values 
         perc = standard_curve_data["perc"].values
         diffs_of_values = standard_curve_data['diffs_of_values'].values
         
@@ -146,12 +158,17 @@ def compute_4PL_params(p0 = p0):
         x_fit = np.linspace(min(perc), max(perc)*2, 10000)
         y_fit = logistic_4_param(x_fit, a_fit, b_fit, c_fit, d_fit)
 
+        # values for R2
+        callibrators_pred = logistic_4_param(perc, a_fit, b_fit, c_fit, d_fit)
+        r2 = r2_score(callibrators, callibrators_pred)
+
         param_results_dict[assay] = {"params": popt, 
                             "perc": perc, 
                             "callibrators": callibrators,
                             "diffs_of_values": diffs_of_values,
                             "x_fit": x_fit, 
-                            "y_fit": y_fit}
+                            "y_fit": y_fit,
+                            "r2": r2}
         
     return param_results_dict
 
@@ -263,8 +280,10 @@ def infer_x_values_from_absorbance(data):
 
 ## Sidebar 
 st.sidebar.title("Haemostasis ELISA calculator")
-
+with st.sidebar:
+    st.markdown("[About and source code](https://github.com/ArmandBester/haemostasis_elisa)")
 with st.sidebar.expander("Info"):
+    
     st.markdown('''This is where you upload your 
                 template xlsx file 
                 with your ELISA results
@@ -299,10 +318,10 @@ session = st.session_state['session']
 
 
 if session != '':
-    print("OK")
+    
     st.markdown("## Uploaded data")
 
-    data = read_data_to_dataframe(save_path)
+    data = read_data_to_dataframe(save_path)    
     st.dataframe(data)
 
     unique_assays = data['assay'].unique()
@@ -313,10 +332,13 @@ if session != '':
     # compute and extract the standard curve data
     param_results_dict = compute_4PL_params()
     figure_dicts = create_figures(param_results_dict)
-
+    
     st.markdown("## Regression plots")
     for plot in figure_dicts:
         st.plotly_chart(plot)
+    
+    for assay in param_results_dict.keys():
+        st.markdown(f"{assay} $R^2$: {param_results_dict[assay]['r2']}")
 
     st.markdown("## Sample results")
     st.write("Sample results go here")
@@ -326,15 +348,29 @@ if session != '':
 
     st.markdown("Inferred sample results")
     x_infered_data = infer_x_values_from_absorbance(data)
-    
+    x_infered_data['Levels'] = ['possibly deficient' if x < 50 
+                    else 'likely normal' if x >= 50 
+                    else '' 
+                    for x in x_infered_data['perc']]
 
     st.dataframe(x_infered_data)
 
+    # plot the patient results as bar plots
     f_results = px.bar(data_frame=x_infered_data, 
                        x='number', y='perc', 
-                       facet_row='assay', height=800, color='perc', error_y='stdev',
-                       color_continuous_scale=px.colors.sequential.YlGnBu,  
-                       range_color=[0, 100])
+                       facet_row='assay', height=800, width=1200, 
+                       color='perc', error_y='stdev',
+                       color_continuous_scale=px.colors.sequential.Turbo,  
+                       range_color=[0, 100],
+                       pattern_shape="Levels", pattern_shape_sequence=["", "."])
+    f_results.update_layout(
+        legend=dict(
+        x=-0.2,  # Close to the left edge
+        y=0.99,  # Close to the top edge
+        xanchor="left",
+        yanchor="top"
+    )
+    )
     f_results.update_yaxes(matches=None)
     st.plotly_chart(f_results)
 
